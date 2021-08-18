@@ -1,4 +1,4 @@
-module goWebSecure-go
+module github.com/gowebsecure/goWebSecure-go
 
 go 1.16
 
