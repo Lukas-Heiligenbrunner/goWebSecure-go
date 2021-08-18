@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"goWebSecure-go/oauth"
+	"github.com/gowebsecure/goWebSecure-go/oauth"
 	"gopkg.in/oauth2.v3"
 	"log"
 	"net/http"
