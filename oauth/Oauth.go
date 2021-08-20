@@ -11,14 +11,27 @@ import (
 )
 
 var srv *server.Server
+var manager *manage.Manager
 
 // callback function when a userlogin is performed to check the user in db
 var userQuery func(id string) (CustomClientInfo, error)
 
+func SetClientInfoHandler(handler func(r *http.Request) (string, string, error)) {
+	srv.SetClientInfoHandler(handler)
+}
+
+func GetServer() *server.Server {
+	return srv
+}
+
+func GetManager() *manage.Manager {
+	return manager
+}
+
 func InitOAuth(userquery func(id string) (CustomClientInfo, error)) {
 	userQuery = userquery
 
-	manager := manage.NewDefaultManager()
+	manager = manage.NewDefaultManager()
 	// token store
 	manager.MustTokenStorage(store.NewMemoryTokenStore())
 

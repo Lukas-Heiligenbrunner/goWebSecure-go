@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-func jsonify(v interface{}) []byte {
+func Jsonify(v interface{}) []byte {
 	// jsonify results
 	str, err := json.Marshal(v)
 	if err != nil {
