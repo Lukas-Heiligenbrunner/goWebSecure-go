@@ -8,10 +8,14 @@ func cleanUp() {
 	handlers = make(map[string]Handler)
 }
 
+const (
+	TestNode1 = iota
+)
+
 func TestAddHandler(t *testing.T) {
 	cleanUp()
 
-	AddHandler("test", ActorNode, func(info *HandlerInfo) []byte {
+	AddHandler("test", TestNode1, func(info *HandlerInfo) []byte {
 		return nil
 	})
 	if len(handlers) != 1 {
@@ -23,13 +27,13 @@ func TestCallOfHandler(t *testing.T) {
 	cleanUp()
 
 	i := 0
-	AddHandler("test", ActorNode, func(info *HandlerInfo) []byte {
+	AddHandler("test", TestNode1, func(info *HandlerInfo) []byte {
 		i++
 		return nil
 	})
 
 	// simulate the call of the api
-	handleAPICall("test", "", ActorNode, nil)
+	handleAPICall("test", "", TestNode1, nil)
 
 	if i != 1 {
 		t.Errorf("Unexpected number of Lambda calls : %d/1", i)
@@ -39,7 +43,7 @@ func TestCallOfHandler(t *testing.T) {
 func TestDecodingOfArguments(t *testing.T) {
 	cleanUp()
 
-	AddHandler("test", ActorNode, func(info *HandlerInfo) []byte {
+	AddHandler("test", TestNode1, func(info *HandlerInfo) []byte {
 		var args struct {
 			Test    string
 			TestInt int
@@ -58,13 +62,13 @@ func TestDecodingOfArguments(t *testing.T) {
 	})
 
 	// simulate the call of the api
-	handleAPICall("test", `{"Test":"myString","TestInt":42}`, ActorNode, nil)
+	handleAPICall("test", `{"Test":"myString","TestInt":42}`, TestNode1, nil)
 }
 
 func TestNoHandlerCovers(t *testing.T) {
 	cleanUp()
 
-	ret := handleAPICall("test", "", ActorNode, nil)
+	ret := handleAPICall("test", "", TestNode1, nil)
 
 	if ret != nil {
 		t.Error("Expect nil return within unhandled api action")

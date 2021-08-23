@@ -45,8 +45,16 @@ func ServerInit(userquery func(id string) (oauth.CustomClientInfo, error), port 
 	return &err
 }
 
-func AddAPINode(name string, Node int) {
-	http.Handle(APIPREFIX+"/"+name, oauth.ValidateToken(handlefunc, Node))
+// AddAPINode add create new API node (/api/<name>) on webserver
+// define whether you want a secure node (with token check) or not with the Secure flag
+func AddAPINode(name string, node int, secure bool) {
+	if secure {
+		http.Handle(APIPREFIX+"/"+name, oauth.ValidateToken(handlefunc, node))
+	} else {
+		http.HandleFunc(APIPREFIX+"/"+name, func(w http.ResponseWriter, r *http.Request) {
+			handlefunc(w, r, node, nil)
+		})
+	}
 }
 
 func handleAPICall(action string, requestBody string, apiNode int, info *HandlerInfo) []byte {
