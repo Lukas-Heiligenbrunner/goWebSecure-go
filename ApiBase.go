@@ -36,11 +36,16 @@ func AddHandler(action string, apiNode int, h func(info *HandlerInfo) []byte) {
 	handlers[fmt.Sprintf("%s/%d", action, apiNode)] = Handler{action, h, apiNode}
 }
 
+// ServerInit initialize the webserver
+// userquery is called within every userlogin to check if user/pwdhash is really correct in db
+// we may want do declare userquery as nil if we want to disable oauth functionality
 func ServerInit(userquery func(id string) (oauth.CustomClientInfo, error), port uint16) *error {
 	// initialize oauth service and add corresponding auth routes
-	oauth.InitOAuth(userquery)
+	if userquery != nil {
+		oauth.InitOAuth(userquery)
+	}
 
-	fmt.Printf("Server up and running on port %d\n", port)
+	fmt.Printf("Server up and running on port %d! Oauth available: %t\n", port, userquery != nil)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	return &err
 }
